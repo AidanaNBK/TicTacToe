@@ -1,5 +1,5 @@
 import { useState } from "react";
-export default function PlayerInfo({ name, symbol }) {
+export default function PlayerInfo({ name, symbol, isActive }) {
   let [userName, setPlayerName] = useState(name);
   let [isEditing, setIsEditing] = useState(false);
 
@@ -18,12 +18,13 @@ export default function PlayerInfo({ name, symbol }) {
       type="text"
       required
       value={userName}
+      // now due to the change in the userName, it will be updated by "value" prop
       onChange={handleChangeName}
     ></input>
   );
 
   return (
-    <li>
+    <li className={isActive ? "active" : null}>
       <span className="player">
         {playerName}
         <span className="player-symbol"> {symbol} </span>
