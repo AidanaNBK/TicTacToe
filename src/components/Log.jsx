@@ -1,4 +1,5 @@
 export default function Log({ turns }) {
+  //{ player, square: { rowIndex, colIndex}
   return (
     <ol id="log">
       {turns.map((turn) => (
