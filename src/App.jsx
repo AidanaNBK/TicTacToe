@@ -1,8 +1,17 @@
 import PlayerInfo from "./components/PlayerInfo";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
+import GameOver from "./components/GameOver";
+
+import { WINNING_COMBINATIONS } from "./winning-combinations";
 
 import { useState } from "react";
+
+const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 
 function deriveActivePlayer(gameTurn) {
   let currentPlayer = "X";
@@ -17,11 +26,37 @@ function App() {
   const [gameTurns, setGameTurns] = useState([]);
 
   let activePlayer = deriveActivePlayer(gameTurns);
+  let hasWinner = null;
+  let hasDraw = gameTurns.length === 9 && !hasWinner;
+
+  let gameBoard = initialGameBoard;
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { rowIndex, colIndex } = square;
+    gameBoard[rowIndex][colIndex] = player;
+  }
+
+  for (const comb of WINNING_COMBINATIONS) {
+    const firstSymbol = gameBoard[comb[0].row][comb[0].column];
+    const secondSymbol = gameBoard[comb[1].row][comb[1].column];
+    const thirdSymbol = gameBoard[comb[2].row][comb[2].column];
+
+    if (
+      firstSymbol &&
+      secondSymbol &&
+      thirdSymbol &&
+      firstSymbol === secondSymbol &&
+      firstSymbol === thirdSymbol
+    ) {
+      hasWinner = firstSymbol;
+    }
+  }
 
   function handleChangePlayer(row, col) {
     // setActivePlayer((activePlayer) => (activePlayer === "X" ? "O" : "X"));
     setGameTurns((prevTurn) => {
       let currentPlayer = deriveActivePlayer(gameTurns);
+
       const updatedTurn = [
         { player: currentPlayer, square: { rowIndex: row, colIndex: col } },
         ...prevTurn,
@@ -45,7 +80,10 @@ function App() {
             isActive={activePlayer === "O"}
           ></PlayerInfo>
         </ol>
-        <GameBoard onSelectSquare={handleChangePlayer} gameTurn={gameTurns} />
+        {(hasWinner || hasDraw) && (
+          <GameOver winner={hasWinner} draw={hasDraw}></GameOver>
+        )}
+        <GameBoard onSelectSquare={handleChangePlayer} gameBoard={gameBoard} />
       </div>
       <Log turns={gameTurns} />
     </main>

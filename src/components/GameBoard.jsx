@@ -1,17 +1,4 @@
-const initialGameBoard = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-
-export default function GameBoard({ onSelectSquare, gameTurn }) {
-  let gameBoard = initialGameBoard;
-  for (const turn of gameTurn) {
-    const { square, player } = turn;
-    const { rowIndex, colIndex } = square;
-    gameBoard[rowIndex][colIndex] = player;
-  }
-
+export default function GameBoard({ onSelectSquare, gameBoard }) {
   //   const [gameBoard, setGameBoard] = useState(initialGameBoard);
   //   function handleChangeBoard(rowIndex, colIndex, play) {
   //     setGameBoard((gameBoard) => {
