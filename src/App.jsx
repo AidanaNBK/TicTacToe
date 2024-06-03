@@ -23,13 +23,14 @@ function deriveActivePlayer(gameTurn) {
 
 function App() {
   // const [activePlayer, setActivePlayer] = useState("X");
-  const [gameTurns, setGameTurns] = useState([]);
+  let [gameTurns, setGameTurns] = useState([]);
 
   let activePlayer = deriveActivePlayer(gameTurns);
   let hasWinner = null;
   let hasDraw = gameTurns.length === 9 && !hasWinner;
 
-  let gameBoard = initialGameBoard;
+  let gameBoard = [...initialGameBoard.map((array) => [...array])];
+  // Need to use the deep copy for ability to then restart the game
   for (const turn of gameTurns) {
     const { square, player } = turn;
     const { rowIndex, colIndex } = square;
@@ -65,6 +66,10 @@ function App() {
     });
   }
 
+  function restartGame() {
+    setGameTurns([]);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -81,7 +86,11 @@ function App() {
           ></PlayerInfo>
         </ol>
         {(hasWinner || hasDraw) && (
-          <GameOver winner={hasWinner} draw={hasDraw}></GameOver>
+          <GameOver
+            winner={hasWinner}
+            draw={hasDraw}
+            restart={restartGame}
+          ></GameOver>
         )}
         <GameBoard onSelectSquare={handleChangePlayer} gameBoard={gameBoard} />
       </div>
