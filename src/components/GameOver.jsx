@@ -1,7 +1,9 @@
-export default function GameOver({ winner, draw, restart }) {
-  let showText = <p> {winner} won!</p>;
-  if (draw) {
-    showText = <p> It's a Draw! </p>;
+export default function GameOver({ winner, draw, restart, players }) {
+  console.log(draw);
+  let showText = <p> It's a Draw! </p>;
+  if (!draw) {
+    let winnerPlayer = players[winner];
+    showText = <p>{winnerPlayer} WON the Game!</p>;
   }
   return (
     <div id="game-over">
